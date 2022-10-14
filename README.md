@@ -63,11 +63,16 @@ opportunity to use more advanced, deep-learning approaches to classification.
 ### References
 [1] Ilse, Maximilian, Tomczak, Jakub M., and Welling, Max. "Attention-based Deep Multiple
 Instance Learning". ICML. PMLR, 2018.
+-> https://github.com/garydoranjr/misvm
+-> https://github.com/AMLab-Amsterdam/AttentionDeepMIL
+
 [2] Papadopoulos, Alexandros, Topouzis, Fotis, and Delopoulos, Anastasios. "An
 interpretable multiple-instance approach for the detection of referable diabetic retinopathy in
 fundus images". Nature Sci Rep, 2021.
+
 [3] Carbonneau, Marc-André, et al. "Multiple instance learning: A survey of problem
 characteristics and applications". Pattern Recognition 2018.
+
 [4] Wang, Xinggang, et al. "Revisiting multiple instance neural networks". Pattern
 Recognition, 2018.
 -> https://github.com/keras-team/keras
