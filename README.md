@@ -71,6 +71,7 @@ characteristics and applications". Pattern Recognition 2018.
 [4] Wang, Xinggang, et al. "Revisiting multiple instance neural networks". Pattern
 Recognition, 2018.
 -> https://github.com/keras-team/keras
+
 [5] Xiong, Danyi, et al. "A comparative study of multiple instance learning methods for cancer
 detection using T-cell receptor sequences". Computational and Structural Biotechnology
 Journal, 2021.
