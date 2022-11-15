@@ -6,4 +6,4 @@ matplotlib
 jupyter
 scipy
 seaborn
-
+git+https://github.com/chlorochrule/cknn
