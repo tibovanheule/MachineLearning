@@ -8,3 +8,5 @@ scipy
 seaborn
 git+https://github.com/chlorochrule/cknn
 tensorflow
+cvxopt
+git+https://github.com/garydoranjr/misvm.git#egg=misvm
