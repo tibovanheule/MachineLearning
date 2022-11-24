@@ -5,7 +5,7 @@ from __future__ import print_function, division
 import os
 import re
 import sys
-import traceback
+import logging
 from collections.abc import MutableSequence, Sequence
 from collections import defaultdict
 from itertools import chain, starmap
@@ -347,8 +347,7 @@ def _parse_examples(schema, data_filename):
             try:
                 exset.append(_parse_example(schema, line))
             except Exception as e:
-                traceback.print_exc(file=sys.stderr)
-                print('Warning: skipping line: "%s"' % line, file=sys.stderr)
+                logging.warning('Warning: skipping line: "%s"' % line, file=sys.stderr)
     return exset
 
 
