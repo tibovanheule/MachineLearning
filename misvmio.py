@@ -55,8 +55,7 @@ class Feature(object):
             return 1
         elif self.tup < other.tup:
             return -1
-        else:
-            return 0
+        return 0
 
     def __hash__(self):
         return self.tup.__hash__()
@@ -71,8 +70,7 @@ class Feature(object):
             return float(self.values.index(value))
         elif (self.type == Feature.Type.BINARY or self.type == Feature.Type.CLASS):
             return 1.0 if value else 0.0
-        else:
-            return value
+        return value
 
 
 Feature.CLASS = Feature("CLASS", Feature.Type.CLASS)
@@ -91,8 +89,7 @@ class Schema(Sequence):
             return 1
         elif self.features < other.features:
             return -1
-        else:
-            return 0
+        return 0
 
     def __hash__(self):
         return self.features.__hash__()
@@ -203,8 +200,7 @@ class Example(MutableSequence):
     def to_float(self, normalizer=None):
         if normalizer is None:
             normalizer = lambda x: x
-        return normalizer([feature.to_float(value)
-                           for feature, value in zip(self.schema, self)])
+        return normalizer([feature.to_float(value) for feature, value in zip(self.schema, self)])
 
 
 class Bag(MutableSequence):
@@ -279,13 +275,9 @@ def _parse_c45(schema_filename, data_filename):
     """Parses C4.5 given file names"""
     try:
         schema = _parse_schema(schema_filename)
-    except Exception as e:
-        raise Exception('Error parsing schema: %s' % e)
-
-    try:
         examples = _parse_examples(schema, data_filename)
     except Exception as e:
-        raise Exception('Error parsing examples: %s' % e)
+        raise Exception('Error parsing: %s' % e)
 
     return examples
 
@@ -332,12 +324,11 @@ def _parse_feature(line, needs_id=True):
         return Feature(name, Feature.Type.CONTINUOUS)
     elif len(values) == 2 and '0' in values and '1' in values:
         return Feature(name, Feature.Type.BINARY)
-    else:
-        return Feature(name, Feature.Type.NOMINAL, values)
+    return Feature(name, Feature.Type.NOMINAL, values)
 
 
 def _parse_values(remainder):
-    values = list()
+    values = []
     for raw in remainder.split(','):
         raw = raw.strip()
         if len(raw) > 1 and raw[0] == '"' and raw[-1] == '"':
@@ -401,14 +392,13 @@ def find_file(filename, rootdir):
     """
     for dirpath, _, filenames in os.walk(rootdir):
         if filename in filenames:
-            return os.path.join(dirpath, filename)
+            return Path(dirpath) / filename
 
 
 def save_c45(example_set, basename, basedir='.'):
     schema_name = Path(basedir) / str(basename + NAMES_EXT)
     data_name = Path(basedir) / str(basename + DATA_EXT)
 
-    print(schema_name)
     with open(schema_name, 'w+') as schema_file:
         schema_file.write('0,1.\n')
         for feature in example_set.schema:
