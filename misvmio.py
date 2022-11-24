@@ -9,6 +9,7 @@ import traceback
 from collections.abc import MutableSequence, Sequence
 from collections import defaultdict
 from itertools import chain, starmap
+from  pathlib import Path
 
 NAMES_EXT = '.names'
 DATA_EXT = '.data'
@@ -66,15 +67,10 @@ class Feature(object):
     def to_float(self, value):
         if value is None:
             return None
-        if (self.type == Feature.Type.ID or
-                    self.type == Feature.Type.NOMINAL):
+        if (self.type == Feature.Type.ID or self.type == Feature.Type.NOMINAL):
             return float(self.values.index(value))
-        elif (self.type == Feature.Type.BINARY or
-                      self.type == Feature.Type.CLASS):
-            if value:
-                return 1.0
-            else:
-                return 0.0
+        elif (self.type == Feature.Type.BINARY or self.type == Feature.Type.CLASS):
+            return 1.0 if value else 0.0
         else:
             return value
 
@@ -265,11 +261,11 @@ def bag_set(exampleset, bag_attr=0):
 
 def parse_c45(file_base, rootdir='.'):
     """
-    Returns an ExampleSet from the
-    C4.5 formatted data
+    Returns an ExampleSet from the C4.5 formatted data
     """
     schema_name = file_base + NAMES_EXT
     data_name = file_base + DATA_EXT
+    
     schema_file = find_file(schema_name, rootdir)
     if schema_file is None:
         raise ValueError('Schema file not found')
@@ -301,8 +297,7 @@ def _parse_schema(schema_filename):
         for line in schema_file:
             feature = _parse_feature(line, needs_id)
             if feature is not None:
-                if (needs_id and
-                            feature.type == Feature.Type.ID):
+                if (needs_id and feature.type == Feature.Type.ID):
                     needs_id = False
                 features.append(feature)
     try:
@@ -312,8 +307,7 @@ def _parse_schema(schema_filename):
     features.append(Feature.CLASS)
     return Schema(features)
 
-
-def _parse_feature(line, needs_id):
+def _parse_feature(line, needs_id=True):
     """
     Parse a feature from the given line;
     second argument indicates whether we
@@ -360,8 +354,7 @@ def _parse_examples(schema, data_filename):
             if len(line) == 0:
                 continue
             try:
-                ex = _parse_example(schema, line)
-                exset.append(ex)
+                exset.append(_parse_example(schema, line))
             except Exception as e:
                 traceback.print_exc(file=sys.stderr)
                 print('Warning: skipping line: "%s"' % line, file=sys.stderr)
@@ -378,11 +371,9 @@ def _parse_example(schema, line):
             # Unknown value says 'None'
             continue
         stype = schema[i].type
-        if (stype == Feature.Type.ID or
-                    stype == Feature.Type.NOMINAL):
+        if (stype == Feature.Type.ID or stype == Feature.Type.NOMINAL):
             ex[i] = value
-        elif (stype == Feature.Type.BINARY or
-                      stype == Feature.Type.CLASS):
+        elif (stype == Feature.Type.BINARY or stype == Feature.Type.CLASS):
             ex[i] = bool(int(value))
         elif stype == Feature.Type.CONTINUOUS:
             ex[i] = float(value)
@@ -414,17 +405,15 @@ def find_file(filename, rootdir):
 
 
 def save_c45(example_set, basename, basedir='.'):
-    schema_name = os.path.join(basedir, basename + NAMES_EXT)
-    data_name = os.path.join(basedir, basename + DATA_EXT)
+    schema_name = Path(basedir) / str(basename + NAMES_EXT)
+    data_name = Path(basedir) / str(basename + DATA_EXT)
 
     print(schema_name)
     with open(schema_name, 'w+') as schema_file:
         schema_file.write('0,1.\n')
         for feature in example_set.schema:
-            if (feature.type == Feature.Type.ID or
-                        feature.type == Feature.Type.NOMINAL):
-                schema_file.write('%s:%s.\n' %
-                                  (feature.name, ','.join(sorted(feature.values))))
+            if (feature.type == Feature.Type.ID or feature.type == Feature.Type.NOMINAL):
+                schema_file.write('%s:%s.\n' % (feature.name, ','.join(sorted(feature.values))))
             elif feature.type == Feature.Type.BINARY:
                 schema_file.write('%s:0,1.\n' % feature.name)
             elif feature.type == Feature.Type.CONTINUOUS:
@@ -437,11 +426,9 @@ def save_c45(example_set, basename, basedir='.'):
 
 
 def _feature_to_str(feature, value):
-    if (feature.type == Feature.Type.ID or
-                feature.type == Feature.Type.NOMINAL):
+    if (feature.type == Feature.Type.ID or feature.type == Feature.Type.NOMINAL):
         return value
-    elif (feature.type == Feature.Type.BINARY or
-                  feature.type == Feature.Type.CLASS):
+    elif (feature.type == Feature.Type.BINARY or feature.type == Feature.Type.CLASS):
         return str(int(value))
     elif feature.type == Feature.Type.CONTINUOUS:
         return str(float(value))
