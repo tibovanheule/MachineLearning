@@ -1,0 +1,26 @@
+0,1.
+Train_id: 128, 92, 26, 50, 45, 84, 14, 70, 88, 65, 125, 129, 18, 100, 15, 120, 90, 101, 104, 33.
+C0: continuous.
+C1=bucket: continuous.
+C1=ellipse: continuous.
+C1=hexagon: continuous.
+C1=rectangle: continuous.
+C1=u_shaped: continuous.
+C2=long: continuous.
+C2=short: continuous.
+C3=double: continuous.
+C3=not_double: continuous.
+C4=arc: continuous.
+C4=flat: continuous.
+C4=jagged: continuous.
+C4=none: continuous.
+C4=peaked: continuous.
+C5: continuous.
+L0=circle: continuous.
+L0=diamond: continuous.
+L0=hexagon: continuous.
+L0=rectangle: continuous.
+L0=triangle: continuous.
+L0=utriangle: continuous.
+L1: continuous.
+Train_list1_order: continuous.
