@@ -3,8 +3,9 @@ import time
 import logging
 import matplotlib.pyplot as plt
 from pathlib import Path
+import pandas as pd
 
-def result(algo,y_true,y_pred,time_ep,k_fold):
+def result(algo,y_true,y_pred,time_ep,k_fold,dataset):
     epoch_time = int(time.time())
     logging.info("saving results ...")
 
@@ -26,7 +27,7 @@ def result(algo,y_true,y_pred,time_ep,k_fold):
     plt.clf()
 
     report = classification_report(y_true=y_true, y_pred=y_pred,output_dict=True)
-    names = ["algo", "k_fold", "time_running","time","acc"]
+    names = ["algo", "k_fold", "time_running","time","acc","dataset"]
     acc = report["accuracy"]
     del report["accuracy"] 
     names += [ up +"_" + lo for up in report for lo in report[str(up)]]
@@ -36,6 +37,18 @@ def result(algo,y_true,y_pred,time_ep,k_fold):
         with open(file_path,"a") as file:
             file.write(",".join(names)+"\n")
     with open(file_path,"a") as file:
-        result = [algo, str(k_fold), str(epoch_time),str(time_ep),str(acc)]
+        result = [algo, str(k_fold), str(epoch_time),str(time_ep),str(acc),dataset]
         result += [ str(report[upper][lo]) for upper in report for lo in report[upper]]
         file.write(",".join(result)+"\n")
+        
+def read_score_boxplot():
+    file_path = Path("compare/score.csv")
+    if not file_path.is_file():
+        return
+    data = pd.read_csv(file_path)
+    fig, axes = plt.subplots(1,len(set(data["algo"]))+1)
+    for i,v in enumerate(set(data["algo"])):
+        axes[i].boxplot(list(data[data["algo"]==v]["acc"]))
+        
+    
+    
