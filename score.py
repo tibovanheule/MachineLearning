@@ -22,7 +22,7 @@ def result(algo,y_true,y_pred,time_ep,k_fold,dataset):
 
     plt.xlabel('Predictions', fontsize=18)
     plt.ylabel('Actuals', fontsize=18)
-    plt.title('Confusion Matrix', fontsize=18)
+    plt.title('Confusion Matrix for ' + algo, fontsize=18)
     plt.savefig(str("compare/"+str(epoch_time)),dpi=300)
     plt.clf()
 
