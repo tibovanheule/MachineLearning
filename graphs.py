@@ -9,10 +9,22 @@ algos = ["MILboost LogSumExponential", "MILboost", "MissSVM", "sbMIL", "sbMIL", 
 for algo in algos:
     csv_algo = csvreader[csvreader['algo'] == algo]
 
-    for dataset in ['fox','mutagenesis-atoms','mutagenesis-bonds','mutagenesis-chains','eastWest','elephant','tiger','westEast', 'musk1']:
+    for dataset in ['fox','mutagenesis-atoms','mutagenesis-bonds','mutagenesis-chains','eastWest','elephant','tiger','westEast', 'musk1', 'musk2']:
         csv_algo_dataset = csv_algo[csv_algo['dataset'] == dataset]
 
-        plt.scatter(csv_algo_dataset['k_fold'], csv_algo_dataset['acc'], label=dataset)
+        accuracies = csv_algo_dataset['acc'].values.tolist()
+        kfold = csv_algo_dataset['k_fold'].values.tolist()
+
+        accs = [0,0,0,0,0]
+        howmany = [0,0,0,0,0]
+
+        for i, acc in enumerate(accuracies):
+            accs[ (kfold[i] - 1) % 5 ] += acc
+            howmany[ (kfold[i] - 1) % 5 ] += 1
+
+        if(not howmany.__contains__(0)):
+            res = [i / j for i, j in zip(accs, howmany)]
+            plt.scatter([1,2,3,4,5], accs, label=dataset)
 
     plt.title(algo)
     plt.xlabel("k-fold")
