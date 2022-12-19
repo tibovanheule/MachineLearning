@@ -18,5 +18,5 @@ for algo in algos:
     plt.xlabel("k-fold")
     plt.ylabel("acc")
     plt.legend(bbox_to_anchor=(1.025, 1), loc='upper left', borderaxespad=0)
-    plt.savefig(algo)
+    plt.savefig(algo, bbox_inches='tight')
     plt.close()
