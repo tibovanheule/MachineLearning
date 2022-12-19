@@ -4,27 +4,39 @@ import logging
 import matplotlib.pyplot as plt
 from pathlib import Path
 import pandas as pd
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import numpy as np
 
 def result(algo,y_true,y_pred,time_ep,k_fold,dataset):
     epoch_time = int(time.time())
     logging.info("saving results ...")
+
+    cm = confusion_matrix(y_true, y_pred, normalize='all')
+    fig, ax = plt.subplots(figsize=(10, 10))
+    sns.heatmap(cm, annot=True, fmt='.2f') #xticklabels=target_names, yticklabels=target_names
+    plt.xlabel('Predictions', fontsize=18)
+    plt.ylabel('Actuals', fontsize=18)
+    plt.title('Confusion Matrix for ' + algo + 'on dataset ' + dataset, fontsize=18)
+    plt.savefig(str("compare/" + str(epoch_time)), dpi=300)
+    plt.clf()
 
     conf_matrix = confusion_matrix(y_true=y_true, y_pred=y_pred)
     
     #
     # Print the confusion matrix using Matplotlib
     #
-    fig, ax = plt.subplots(figsize=(7.5, 7.5))
-    ax.matshow(conf_matrix, cmap=plt.cm.Blues, alpha=0.3)
-    for i in range(conf_matrix.shape[0]):
-        for j in range(conf_matrix.shape[1]):
-            ax.text(x=j, y=i,s=conf_matrix[i, j], va='center', ha='center', size='xx-large')
+    #fig, ax = plt.subplots(figsize=(7.5, 7.5))
+    #ax.matshow(conf_matrix, cmap=plt.cm.Blues, alpha=0.3)
+    #for i in range(conf_matrix.shape[0]):
+    #    for j in range(conf_matrix.shape[1]):
+    #        ax.text(x=j, y=i,s=conf_matrix[i, j], va='center', ha='center', size='xx-large')
 
-    plt.xlabel('Predictions', fontsize=18)
-    plt.ylabel('Actuals', fontsize=18)
-    plt.title('Confusion Matrix for ' + algo + 'on dataset ' + dataset, fontsize=18)
-    plt.savefig(str("compare/"+str(epoch_time)),dpi=300)
-    plt.clf()
+    #plt.xlabel('Predictions', fontsize=18)
+    #plt.ylabel('Actuals', fontsize=18)
+    #plt.title('Confusion Matrix for ' + algo + 'on dataset ' + dataset, fontsize=18)
+    #plt.savefig(str("compare/"+str(epoch_time)),dpi=300)
+    #plt.clf()
 
     report = classification_report(y_true=y_true, y_pred=y_pred,output_dict=True)
     names = ["algo", "k_fold", "time_running","time","acc","dataset"]
